@@ -125,7 +125,7 @@ resource "aws_launch_template" "example" {
               echo "Hello, World" > index.html
               nohup busybox httpd -f -p ${var.server_port} &
               EOF
-              )
+  )
 }
 
 resource "aws_autoscaling_group" "example" {
