@@ -1,3 +1,8 @@
+variable "bucket" {
+  description = "Name of the AWS S3 bucket storing the Terraform state"
+  type        = string
+}
+
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type        = number
