@@ -95,7 +95,7 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 
-# launch_template instead of launch_configuration, because the latter are not available
+# launch_template instead of launch_configuration, because the latter is not available
 # to the Free account tier
 resource "aws_launch_template" "example" {
   name_prefix            = "example"
@@ -103,11 +103,12 @@ resource "aws_launch_template" "example" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.instance.id]
 
-  user_data = base64encode(<<-EOF
-              #!/bin/bash
-              echo "Hello, World" > index.html
-              nohup busybox httpd -f -p ${var.server_port} &
-              EOF
+  user_data = base64encode(
+    templatefile("user-data.sh", {
+      server_port = var.server_port
+      db_address  = data.terraform_remote_state.db.outputs.address
+      db_port     = data.terraform_remote_state.db.outputs.port
+    })
   )
 }
 
