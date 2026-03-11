@@ -1,11 +1,11 @@
-## "provider" informs Terraform which API calls to use and what kind of resources are available
+## "provider" informs Terraform which API calls to use and what kind of resources are available. In this case our provider is Amazon Web Services (AWS)
 provider "aws" {
   region = "eu-north-1"
 }
 
 
 ## "data" sources are external read-only objects. We need these information sources
-## for our infrastructure configurations, but cannot know them beforehand
+## for our infrastructure configurations, but cannot know them beforehand.
 ## The arguments you pass in are typically search filters that
 ## indicate to the data source what information you’re looking for.
 
@@ -234,9 +234,11 @@ resource "aws_autoscaling_group" "example" {
 }
 
 
-## "outputs" are Terraform output variables. They are displayed on the command line
+## "outputs" are Terraform output values. They are displayed on the command line
 ## or can be accessed by other Terraform configurations using this module. 
 
+# This output gives us the public facing DNS of the Load balancer, which will
+# show our Hello World page upon visitation. 
 output "public_dns" {
   value       = aws_lb.example.dns_name
   description = "The DNS of the Load Balancer"
