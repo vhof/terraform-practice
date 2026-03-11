@@ -19,9 +19,9 @@ The following Terraform constructs are used:
 * `output`
 
 #### `provider`
-`provider` informs Terraform which API calls to use and what kind of resources are available. In this case our provider is Amazon Web Services (AWS)
+`provider` informs Terraform which API calls to use and what kind of resources are available. In this case our provider is Amazon Web Services (AWS).
 
-To make these API calls, Terraform needs an access key of a user that has the appropriate privilages. For the purpose of these exercises, I've created a user with Administrator privilages and stored its credentials in my Environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` 
+To make these API calls, Terraform needs an access key of a user that has the appropriate privileges. For the purpose of these exercises, I've created a user with Administrator privileges and stored its credentials in my Environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` 
 
 #### `data`
 `data` sources are external read-only objects. We need these information sources for our infrastructure configurations, but cannot know them beforehand. The arguments you pass in are typically search filters that indicate to the data source what information you’re looking for. 
@@ -39,7 +39,7 @@ variables from HCP Terraform
 Apart from special cases such as AWS keys, the syntax for general Terraform Environment variables is `TF_VAR_<variable name>`
 
 #### `resource`
-`resources` are the actual components of an infrastructure, e.g. routing tables, load balancers, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform
+`resources` are the actual components of an infrastructure, e.g. routing tables, load balancers, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform.
 
 #### `output`
 `output`s are Terraform output values. They are displayed on the command line (after (re-)deploying) or can be accessed by other Terraform configurations using this module. 
