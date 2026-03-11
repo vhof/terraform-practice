@@ -1,6 +1,6 @@
 This repository contains my write-along code, elaborations, experiments, and reference work from working through the book *Terraform: Up and Running, Third Edition* (Yevgeniy Brikman, 2022)
 
-My code is not 100% to the letter of the book. Sometimes because of preference, sometimes because of external reasons (such as launch configurations not being available to the an AWS free tier account). I have also added things here and there, such as [this Powershell script](/terraform-practice/chapter-04/destroy-all.ps1) to perform the `terraform destroy` command on multiple Terraform configurations (the book talks about Terragrunt being a solution for such cases, but I wanted to experiment with Powershell). When some code is significantly altered from the example code, I flag it with `# ALTERED`
+My code is not 100% to the letter of the book. Sometimes because of preference, sometimes because of external reasons (such as launch configurations not being available to an AWS free tier account). I have also added things here and there, such as [this Powershell script](/terraform-practice/chapter-04/destroy-all.ps1) to perform the `terraform destroy` command on multiple Terraform configurations (the book talks about Terragrunt being a solution for such cases, but I wanted to experiment with Powershell). When some code is significantly altered from the example code, I flag it with `# ALTERED`
 
 The original code samples can be found in this [public repository](https://github.com/brikis98/terraform-up-and-running-code)
 
