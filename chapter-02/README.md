@@ -1,4 +1,15 @@
-In this chapter we use Terraform to deploy a simple website that utilizes AWS's features for automatic health checks, load balancing and webserver instance launching. 
+In this chapter we use Terraform to deploy a simple website that utilizes AWS's features for automatic health checks, load balancing and webserver instance launching. In short it works as follows: 
+
+* Load balancer consists of [Listeners, Listener rules, Target groups]
+* Listener receives HTTP request on public facing IP
+* Listener rule matches request pattern and forwards request to correct Target group
+* Target group contains an Auto Scaling Group (ASG)
+  * Target group handles health checks, ASG handles launching/scaling instances
+  * ASG contains webserver instances that produce HTTP response
+    * Instances are simple Ubuntu Server images
+* HTTP response returns to Listener, who forwards to requester
+
+All of the above lives inside a VPC (Virtual Private Cloud), essentially a VPN. Only the Load balancer has a public IP. 
 
 The following Terraform constructs are used: 
 * `provider`
@@ -28,7 +39,7 @@ variables from HCP Terraform
 Apart from special cases such as AWS keys, the syntax for general Terraform Environment variables is `TF_VAR_<variable name>`
 
 #### `resource`
-`resources` are the actual components of an infrastructure, e.g. routing tables, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform
+`resources` are the actual components of an infrastructure, e.g. routing tables, load balancers, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform
 
 #### `output`
 `output`s are Terraform output values. They are displayed on the command line (after (re-)deploying) or can be accessed by other Terraform configurations using this module. 
