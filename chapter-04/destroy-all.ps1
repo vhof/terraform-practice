@@ -41,7 +41,9 @@ foreach ($stadium in $stadia) {
                 }
             }
             else {
-                Write-Host "Path not found, continuing.." -ForegroundColor yellow
+                Write-Host "Path " -ForegroundColor yellow -NoNewline
+                Write-Host $path -NoNewline
+                Write-Host " not found, continuing..." -ForegroundColor yellow
             }
         }
     }
