@@ -1,6 +1,8 @@
 variable "db_username" {
   description = "The username for the database"
   type        = string
+
+  # Prevents value from being visible in Terraform planning output
   sensitive   = true
 }
 
