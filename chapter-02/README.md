@@ -11,7 +11,7 @@ In this chapter we use Terraform to deploy a simple website that utilizes AWS's 
 
 All of the above lives inside a VPC (Virtual Private Cloud), essentially a VPN. Only the Load balancer has a public IP. 
 
-The following Terraform constructs are used: 
+The following (new) Terraform blocks are used: 
 * `provider`
 * `data`
 * `variable`
@@ -39,7 +39,7 @@ variables from HCP Terraform
 Apart from special cases such as AWS keys, the syntax for general Terraform Environment variables is `TF_VAR_<variable name>`
 
 #### `resource`
-`resources` are the actual components of an infrastructure, e.g. routing tables, load balancers, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform.
+`resource`s are the actual components of an infrastructure, e.g. routing tables, load balancers, webservers, databases. These are the bread and butter of what we're actually trying to accomplish with Terraform.
 
 #### `output`
 `output`s are Terraform output values. They are displayed on the command line (after (re-)deploying) or can be accessed by other Terraform configurations using this module. 

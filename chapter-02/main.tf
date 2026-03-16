@@ -119,7 +119,7 @@ resource "aws_lb" "example" {
   name               = "terraform-lb-example"
   load_balancer_type = "application"
 
-  # which subnets to use
+  # which subnets to use (default)
   subnets = data.aws_subnets.default.ids
 
   # the routing rules
@@ -147,7 +147,7 @@ resource "aws_lb_listener" "http" {
 
 # The Target group for our webserver instances. Performs health checks using
 # HTTP requests every 15 seconds
-# A Targat group can be a static list of instances, but we use an Auto Scaling Group (ASG)
+# A Target group can be a static list of instances, but we use an Auto Scaling Group (ASG)
 resource "aws_lb_target_group" "asg" {
   name     = "terraform-lb-target_group-example"
   port     = var.server_port
@@ -186,18 +186,19 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 
-# ALTERED: launch_template instead of launch_configuration, because the latter is not available
-# to the Free account tier
-# This is the configuration for the individual webserver (EC2) instances
+# ALTERED: launch_template instead of launch_configuration, because the latter 
+# is not available to the Free account tier This is the configuration for the 
+# individual webserver (EC2) instances
 resource "aws_launch_template" "example" {
   name_prefix            = "example"
   image_id               = "ami-073130f74f5ffb161" # Amazon Machin Image id. This is a Ubuntu Server 24.04 LTS (HVM) image
-  instance_type          = "t3.micro"              # Informs CPU and Memory capacity and such (and pricing)
+  instance_type          = "t3.micro"              # Informs CPU and Memory capacity and such (and therefore also pricing)
   vpc_security_group_ids = [aws_security_group.instance.id]
 
   # Instance launch script. 
   # <<-EOF allows for multiline strings preserving indentation.
-  # <<EOF does the same without indentation.
+  # <<EOF does the same without indentation. It's called: 
+  # "heredoc" syntax.
   # Launch templates require base64 encoded user_data.
   # String interpolation is done using ${...}
   # Launches a simple busybox webserver in the background
