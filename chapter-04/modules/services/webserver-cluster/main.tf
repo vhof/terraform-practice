@@ -1,4 +1,11 @@
+# Changed from chapter-03: the provider block should be in root modules, not 
+# in reusable modules. This is because we don't need the specific provider's Terraform
+# executable in a reusable module, because we won't actually call any <terraform> 
+# commands here. 
+
+## "locals" can be seen as named constants that are reusable throughout a configuration
 locals {
+  # example: "webserver-stage" or "webserver-prod"
   cluster_name        = "webserver-${var.stadium}"
   db_remote_state_key = "${var.stadium}/data-stores/mysql/terraform.tfstate"
 
@@ -21,12 +28,14 @@ locals {
   }
 }
 
+# This security group defines routing rules for our webserver instances.
 resource "aws_security_group" "instance" {
   name_prefix = "terraform-example-instance"
 
 }
 
 # Only allow inboud requests from within the VPC (ie, the load balancer)
+# to our webserver instances
 resource "aws_security_group_rule" "allow_vpc_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.instance.id
@@ -37,10 +46,12 @@ resource "aws_security_group_rule" "allow_vpc_inbound" {
   cidr_blocks = [data.aws_vpc.default.cidr_block]
 }
 
+# This security group defines routing rules for our Load Balancer.
 resource "aws_security_group" "alb" {
   name = "${local.cluster_name}-alb-sg"
 }
 
+# Allow inbound HTTP requests on our Load Balancer
 resource "aws_security_group_rule" "allow_http_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.alb.id
@@ -51,6 +62,7 @@ resource "aws_security_group_rule" "allow_http_inbound" {
   cidr_blocks = local.all_ips
 }
 
+# Allow all outbound requests on our Load Balancer
 resource "aws_security_group_rule" "allow_all_outbound" {
   type              = "egress"
   security_group_id = aws_security_group.alb.id
@@ -61,6 +73,7 @@ resource "aws_security_group_rule" "allow_all_outbound" {
   cidr_blocks = local.all_ips
 }
 
+# Application Load Balancer
 resource "aws_lb" "example" {
   name               = "${local.cluster_name}-asg-lb"
   load_balancer_type = "application"
@@ -68,6 +81,7 @@ resource "aws_lb" "example" {
   security_groups    = [aws_security_group.alb.id]
 }
 
+# Listerner listens on standard HTTP port (80)
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example.arn
   port              = local.http_port
@@ -85,6 +99,8 @@ resource "aws_lb_listener" "http" {
   }
 }
 
+# The Target group for our webserver instances. 
+# Performs health checks every 15 seconds. 
 resource "aws_lb_target_group" "asg" {
   name     = "${local.cluster_name}-asg-tg"
   port     = local.instance_port
@@ -102,6 +118,7 @@ resource "aws_lb_target_group" "asg" {
   }
 }
 
+# Listener rule. Forwards all request path patterns
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority     = 100
@@ -118,14 +135,20 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 
-# launch_template instead of launch_configuration, because the latter is not available
-# to the Free account tier
+# ALTERED: launch_template instead of launch_configuration
+# Individual webserver (EC2) instance launch template
 resource "aws_launch_template" "example" {
   name_prefix            = "example"
   image_id               = local.image_id
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.instance.id]
 
+  # Special path reference expression to use module path instead of root path
+  # Options are:
+  # path.module: filesystem path of the module where expression is used
+  # path.root:   filesystem path of the rood module
+  # path.cws:    filesystem path of the current working directory. 
+  #              generally the same as path.root
   user_data = base64encode(
     templatefile("${path.module}/user-data.sh", {
       server_port = local.instance_port
@@ -135,6 +158,7 @@ resource "aws_launch_template" "example" {
   )
 }
 
+# Auto Scaling Group
 resource "aws_autoscaling_group" "example" {
   launch_template { id = aws_launch_template.example.id }
   vpc_zone_identifier = data.aws_subnets.default.ids
@@ -146,6 +170,8 @@ resource "aws_autoscaling_group" "example" {
   max_size = var.max_size
 
   tag {
+    # Special AWS resource tag. Will become displayname in 
+    # dashboard overviews. Case-sensitive 
     key                 = "Name"
     value               = "${local.cluster_name}-asg"
     propagate_at_launch = true

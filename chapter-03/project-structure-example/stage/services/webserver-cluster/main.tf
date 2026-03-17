@@ -54,7 +54,6 @@ resource "aws_security_group" "instance" {
 }
 
 # This security group defines routing rules for our Load Balancer.
-# Allow all requests on the standard http port (80). 
 resource "aws_security_group" "alb" {
   name = "terraform-example-alb"
 
@@ -140,8 +139,8 @@ resource "aws_lb_listener_rule" "asg" {
 }
 
 # Changed from chapter-02 (moved and changed launch script)
-# ALTERED: launch_template instead of launch_configuration.
-# Individual webserver (EC2) instances
+# ALTERED: launch_template instead of launch_configuration
+# Individual webserver (EC2) instance launch template
 resource "aws_launch_template" "example" {
   name_prefix            = "example"
   image_id               = "ami-073130f74f5ffb161"
