@@ -15,7 +15,7 @@ module "mysql" {
   # Conventionally, our modules should live in a seperate repository,
   # but I didn't feel like doing that. So, this 'remote' source is actually
   # this same repository.
-  # Terraform performs a git clone operation to retrieve thise remote source,
+  # Terraform performs a git clone operation to retrieve this remote source,
   # so we use depth=1 to prevent unnecessary commit history cloning. 
   # We use tags in our repository to mark module versions, and select these versions
   # using the ref parameter. This way, we can test changes to the modules in our 
