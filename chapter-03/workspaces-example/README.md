@@ -1,0 +1,1 @@
+Small practice folder for Terraform workspaces. Terraform workspaces are a quick and dirty way to do some local isolation. Useful for small tests, useless for real isolation or collaboration. 
