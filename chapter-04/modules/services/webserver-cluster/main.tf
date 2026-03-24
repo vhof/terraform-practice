@@ -31,7 +31,6 @@ locals {
 # This security group defines routing rules for our webserver instances.
 resource "aws_security_group" "instance" {
   name_prefix = "terraform-example-instance"
-
 }
 
 # Only allow inboud requests from within the VPC (ie, the load balancer)
